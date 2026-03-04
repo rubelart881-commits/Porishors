@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porishors — Creative Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #0a0a0a;
+    --cream: #f5f0e8;
+    --accent: #ff3b00;
+    --gold: #c8a84b;
+    --mid: #5a5a5a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s;
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid rgba(255,59,0,0.5); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 48px;
+    mix-blend-mode: difference;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 4px;
+    color: var(--cream);
+  }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--cream); text-decoration: none;
+    opacity: 0.7; transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; }
+
+  /* HERO */
+  #hero {
+    height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-text {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 18vw, 260px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.06);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: 8px;
+    animation: floatText 8s ease-in-out infinite;
+  }
+  @keyframes floatText {
+    0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+    50% { transform: translate(-50%, -50%) translateY(-20px); }
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-tag::before {
+    content: ''; display: block;
+    width: 40px; height: 1px; background: var(--accent);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 9vw, 130px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+  }
+  .hero-title span { color: var(--accent); }
+
+  .hero-bottom {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-top: 48px;
+  }
+  .hero-desc {
+    max-width: 380px;
+    font-size: 15px; line-height: 1.7;
+    color: rgba(245,240,232,0.6);
+    font-weight: 300;
+  }
+  .hero-cta {
+    display: flex; align-items: center; gap: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--cream); text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 16px 28px;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .hero-cta::before {
+    content: ''; position: absolute;
+    left: -100%; top: 0; width: 100%; height: 100%;
+    background: var(--accent);
+    transition: left 0.3s ease;
+    z-index: -1;
+  }
+  .hero-cta:hover::before { left: 0; }
+  .hero-cta:hover { border-color: var(--accent); }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 16px 0; overflow: hidden;
+    background: rgba(255,255,255,0.02);
+  }
+  .marquee {
+    display: flex; gap: 60px;
+    animation: marqueeScroll 18s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 4px;
+    color: rgba(255,255,255,0.25);
+  }
+  .marquee span.dot { color: var(--accent); font-size: 12px; }
+  @keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTION COMMON */
+  section { padding: 120px 48px; }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 60px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 80px;
+    height: 1px; background: var(--accent); opacity: 0.4;
+  }
+
+  /* SKILLS */
+  #skills { background: #0f0f0f; }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .skill-card {
+    padding: 44px 36px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .skill-card:hover { background: rgba(255,59,0,0.04); }
+  .skill-card:hover::before { transform: scaleX(1); }
+  .skill-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    margin-bottom: 20px; opacity: 0.7;
+  }
+  .skill-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .skill-desc {
+    font-size: 13px; line-height: 1.6;
+    color: rgba(245,240,232,0.45);
+    font-weight: 300;
+  }
+
+  /* PORTFOLIO */
+  #portfolio { background: var(--ink); }
+  .portfolio-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 60px;
+  }
+  .portfolio-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 6vw, 80px);
+    line-height: 1;
+  }
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .portfolio-item {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: #111;
+    display: flex; align-items: flex-end;
+    padding: 28px;
+    cursor: none;
+  }
+  .portfolio-item:first-child { grid-row: span 2; aspect-ratio: unset; min-height: 500px; }
+  .portfolio-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    transition: transform 0.6s ease;
+  }
+  .portfolio-item:hover .portfolio-bg { transform: scale(1.05); }
+  .port-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 28px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+    z-index: 2;
+  }
+  .port-cat {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  .port-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 1px;
+  }
+  .port-visual {
+    position: absolute; inset: 0; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.15;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px; letter-spacing: 8px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* PRICING */
+  #pricing { background: #0d0d0d; }
+  .pricing-intro {
+    max-width: 500px; margin-bottom: 70px;
+    font-size: 16px; line-height: 1.8;
+    color: rgba(245,240,232,0.5); font-weight: 300;
+  }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .plan {
+    padding: 48px 36px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    transition: all 0.3s;
+  }
+  .plan.featured {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .plan.featured .plan-price,
+  .plan.featured .plan-name,
+  .plan.featured .plan-feature { color: #fff; }
+  .plan.featured .plan-desc { color: rgba(255,255,255,0.7); }
+  .plan.featured .plan-tag { color: rgba(255,255,255,0.9); }
+  .plan-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 24px;
+  }
+  .plan.featured .plan-tag { color: rgba(255,255,255,0.8); }
+  .plan-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px; margin-bottom: 8px;
+  }
+  .plan-price {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .plan-desc {
+    font-size: 12px; color: rgba(245,240,232,0.4);
+    margin-bottom: 36px; font-weight: 300;
+  }
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .plan-feature {
+    font-size: 13px;
+    color: rgba(245,240,232,0.65);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .plan-feature::before {
+    content: '→'; color: var(--accent); font-size: 11px;
+  }
+  .plan.featured .plan-feature::before { color: #fff; }
+  .plan-btn {
+    display: block; margin-top: 40px;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 14px 24px;
+    border: 1px solid currentColor;
+    color: var(--cream); text-decoration: none;
+    transition: all 0.3s;
+  }
+  .plan.featured .plan-btn {
+    background: #fff; color: var(--accent); border-color: #fff;
+  }
+  .plan:not(.featured):hover { background: rgba(255,59,0,0.04); }
+
+  /* CONTACT */
+  #contact {
+    background: var(--ink);
+    text-align: center;
+    padding: 140px 48px;
+  }
+  .contact-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(50px, 8vw, 110px);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .contact-big span { color: var(--accent); }
+  .contact-sub {
+    font-size: 15px; color: rgba(245,240,232,0.45);
+    max-width: 400px; margin: 0 auto 48px;
+    font-weight: 300; line-height: 1.7;
+  }
+  .contact-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+  .contact-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--cream); text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 14px 28px;
+    transition: all 0.3s;
+  }
+  .contact-link:hover { background: var(--accent); border-color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 28px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  footer p {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 2px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* ANIMATIONS */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    #hero { padding: 0 24px 48px; }
+    section { padding: 80px 24px; }
+    .skills-grid, .pricing-grid { grid-template-columns: 1fr; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .portfolio-item:first-child { grid-row: span 1; min-height: 260px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-logo">Porishors</div>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-text">PORISHORS</div>
+  <div class="hero-tag">Creative Agency · Est. 2024</div>
+  <h1 class="hero-title">
+    We Build<br>
+    <span>Visuals</span> That<br>
+    Convert.
+  </h1>
+  <div class="hero-bottom">
+    <p class="hero-desc">
+      A multi-disciplinary studio specializing in graphics, animation, VFX, and digital content. We transform ideas into unforgettable visual experiences.
+    </p>
+    <a href="#portfolio" class="hero-cta">View Our Work →</a>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span>GRAPHICS DESIGN</span><span class="dot">●</span>
+    <span>ANIMATION</span><span class="dot">●</span>
+    <span>VFX</span><span class="dot">●</span>
+    <span>CONTENT CREATION</span><span class="dot">●</span>
+    <span>WEB DEVELOPMENT</span><span class="dot">●</span>
+    <span>TRADING VISUALS</span><span class="dot">●</span>
+    <span>GRAPHICS DESIGN</span><span class="dot">●</span>
+    <span>ANIMATION</span><span class="dot">●</span>
+    <span>VFX</span><span class="dot">●</span>
+    <span>CONTENT CREATION</span><span class="dot">●</span>
+    <span>WEB DEVELOPMENT</span><span class="dot">●</span>
+    <span>TRADING VISUALS</span><span class="dot">●</span>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">What We Do</div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-num">01</div>
+      <div class="skill-name">Graphics Design</div>
+      <div class="skill-desc">Brand identity, logos, social media creatives, and print materials that leave a lasting impression.</div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-num">02</div>
+      <div class="skill-name">Animation</div>
+      <div class="skill-desc">2D & 3D motion graphics, explainer videos, and character animations that tell your story.</div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-num">03</div>
+      <div class="skill-name">VFX</div>
+      <div class="skill-desc">Visual effects, compositing, and post-production that elevate your video content to cinematic quality.</div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-num">04</div>
+      <div class="skill-name">Content Creation</div>
+      <div class="skill-desc">YouTube, Instagram, TikTok — platform-optimized content designed to grow your audience fast.</div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-num">05</div>
+      <div class="skill-name">Development</div>
+      <div class="skill-desc">Clean, modern websites and web apps built for performance, speed, and beautiful UX.</div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-num">06</div>
+      <div class="skill-name">Trading Visuals</div>
+      <div class="skill-desc">Infographics, dashboards, and data visualizations tailored for financial and trading content.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="portfolio-header">
+    <h2 class="portfolio-title reveal">Selected<br>Work</h2>
+    <div class="section-label" style="margin-bottom:0;">Portfolio</div>
+  </div>
+  <div class="portfolio-grid">
+    <div class="portfolio-item reveal">
+      <div class="portfolio-bg"></div>
+      <div class="port-visual">P</div>
+      <div class="port-inner">
+        <div class="port-cat">Brand Identity</div>
+        <div class="port-name">Nova Brand System</div>
+      </div>
+    </div>
+    <div class="portfolio-item reveal">
+      <div class="portfolio-bg" style="background: linear-gradient(135deg,#1a0a00,#0a0a0a)"></div>
+      <div class="port-visual">A</div>
+      <div class="port-inner">
+        <div class="port-cat">Animation</div>
+        <div class="port-name">Motion Reel 2024</div>
+      </div>
+    </div>
+    <div class="portfolio-item reveal">
+      <div class="portfolio-bg" style="background: linear-gradient(135deg,#001a0f,#0a0a0a)"></div>
+      <div class="port-visual">V</div>
+      <div class="port-inner">
+        <div class="port-cat">VFX</div>
+        <div class="port-name">Cinematic VFX Pack</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-label">Pricing Plans</div>
+  <p class="pricing-intro">Transparent pricing, no hidden fees. Choose the plan that fits your project — or let's build a custom package together.</p>
+  <div class="pricing-grid">
+    <div class="plan reveal">
+      <div class="plan-tag">Starter</div>
+      <div class="plan-name">Basic</div>
+      <div class="plan-price">$50+</div>
+      <div class="plan-desc">Per project · Ideal for small tasks</div>
+      <ul class="plan-features">
+        <li class="plan-feature">Logo or banner design</li>
+        <li class="plan-feature">1 revision included</li>
+        <li class="plan-feature">3-day delivery</li>
+        <li class="plan-feature">Source file included</li>
+      </ul>
+      <a href="#contact" class="plan-btn">Get Started</a>
+    </div>
+    <div class="plan featured reveal">
+      <div class="plan-tag">★ Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$150+</div>
+      <div class="plan-desc">Per project · Full creative package</div>
+      <ul class="plan-features">
+        <li class="plan-feature">Full brand identity or video</li>
+        <li class="plan-feature">3 revisions included</li>
+        <li class="plan-feature">5-day delivery</li>
+        <li class="plan-feature">Source files + assets</li>
+        <li class="plan-feature">Priority support</li>
+      </ul>
+      <a href="#contact" class="plan-btn">Get Started</a>
+    </div>
+    <div class="plan reveal">
+      <div class="plan-tag">Enterprise</div>
+      <div class="plan-name">Custom</div>
+      <div class="plan-price">Let's Talk</div>
+      <div class="plan-desc">Monthly retainer · Ongoing work</div>
+      <ul class="plan-features">
+        <li class="plan-feature">Dedicated studio access</li>
+        <li class="plan-feature">Unlimited revisions</li>
+        <li class="plan-feature">Custom timeline</li>
+        <li class="plan-feature">Full project management</li>
+        <li class="plan-feature">Multi-platform delivery</li>
+      </ul>
+      <a href="#contact" class="plan-btn">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2 class="contact-big reveal">
+    Let's Build<br>Something <span>Bold.</span>
+  </h2>
+  <p class="contact-sub reveal">Have a project in mind? We'd love to hear about it. Reach out and let's make it happen.</p>
+  <div class="contact-links reveal">
+    <a href="mailto:hello@porishors.com" class="contact-link">Email Us</a>
+    <a href="#" class="contact-link">WhatsApp</a>
+    <a href="#" class="contact-link">Fiverr</a>
+    <a href="#" class="contact-link">LinkedIn</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2024 Porishors. All rights reserved.</p>
+  <p>Tahsin · Freelance Studio · Bangladesh</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px'; cursor.style.height = '20px';
+      ring.style.width = '56px'; ring.style.height = '56px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px'; cursor.style.height = '12px';
+      ring.style.width = '36px'; ring.style.height = '36px';
+    });
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
